@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mail</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    nav a {
+      margin-right: 15px;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input,
+    textarea {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    iframe {
+      min-height: 600px;
+    }
+
+    .hidden {
+      visibility: hidden;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Welcome to the Mail Page</h1>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/chat">Chat</a>
+    <a href="/mail">Mail</a>
+    <a href="/sms">SMS</a>
+    <a href="/call">Call</a>
+    <a href="/logout">Logout</a>
+  </nav>
+
+  <div>
+    <div>
+      <h2>Inbox</h2>
+      <ul>
+        {{#each mails}}
+        <ul>
+          <li><button class="toggle">{{this.subject}}</button> from {{this.from.text}} - {{this.date}}</li>
+          <li class="hidden"><iframe style="width: 100%; border: none;" srcdoc="{{this.html}}"></iframe></li>
+          <li>{{#each this.attachments}}<button>Download</button>{{this.filename}}{{/each}}</li>
+        </ul>
+        {{/each}}
+      </ul>
+    </div>
+    <div>
+      <h2>Send a mail</h2>
+      <form id="emailForm" onsubmit="sendEmail(event)">
+        <label for="to">To:</label>
+        <input type="email" id="to" name="to" required placeholder="recipient@example.com">
+
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" required placeholder="Email Subject">
+
+        <label for="text">Message:</label>
+        <textarea id="text" name="text" rows="5" required placeholder="Type your message here..."></textarea>
+
+        <label for="attachments">Attachments:</label>
+        <input type="file" id="attachments" name="attachments" multiple>
+
+        <button type="submit">Send Email</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function sendEmail(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      const formData = new FormData(document.getElementById('emailForm')); // Get form data
+
+      fetch('/send-email', {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert("Email sent successfully!");
+            document.getElementById('emailForm').reset(); // Reset the form after successful submission
+          } else {
+            alert("Failed to send email.");
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert("An error occurred while sending the email.");
+        });
+    }
+
+    document.querySelectorAll('.toggle').forEach(function (toggle) {
+      toggle.addEventListener('click', function () {
+        // Find the next sibling li element and toggle its visibility
+        const siblingLi = this.parentElement.nextElementSibling;
+
+        if (siblingLi) {
+          siblingLi.classList.toggle('hidden'); // Toggle the 'hidden' class
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

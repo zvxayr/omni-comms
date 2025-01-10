@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Call</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    nav a {
+      margin-right: 15px;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input,
+    textarea {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+    
+    /* Hide the button initially */
+    #playButton {
+      display: none; 
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Welcome to the Call Page</h1>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/chat">Chat</a>
+    <a href="/mail">Mail</a>
+    <a href="/sms">SMS</a>
+    <a href="/call">Call</a>
+    <a href="/logout">Logout</a>
+  </nav>
+
+  <a href="/" style="visibility: hidden" id="recording">Recording</a>
+
+  <!-- Audio element -->
+  <audio id="audioPlayer" controls style="display:none;"></audio>
+  
+  <!-- Play button -->
+  <button id="playButton">Play Recorded Message</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    socket.emit("joinRoom", "{{ user.phone }}");
+
+    socket.on('initiate_call', (message) => {
+      // if (confirm('Accept Incoming Call?')) {
+      //   socket.emit('call_response', 'accept');
+        socket.emit("joinRoom", "accept_call");
+      // } else {
+      //   socket.emit('call_response', 'decline');
+      //   alert('Call Declined!');
+      // }
+    });
+
+    socket.on('receive_call', async (message) => {
+      const audioUrl = message.audioUrl; // URL of the recorded audio
+      const recording = document.getElementById('recording')
+      
+      recording.href = audioUrl;
+      recording.style.visibility = "visible";
+      
+      // const audioPlayer = document.getElementById('audioPlayer');
+      // const playButton = document.getElementById('playButton');
+// 
+      // try {
+      //   // Fetch the audio file from the server
+      //   const response = await fetch(audioUrl);
+      //   if (!response.ok) throw new Error('Network response was not ok');
+// 
+      //   // Convert the response into a blob
+      //   const blob = await response.blob();
+      //   
+      //   // Create a URL for the blob and set it as the audio source
+      //   const blobUrl = URL.createObjectURL(blob);
+      //   audioPlayer.src = blobUrl;
+// 
+      //   // Show the audio player and enable the button
+      //   audioPlayer.style.display = 'block';
+      //   playButton.style.display = 'inline-block';
+// 
+      //   // Add event listener to play the audio when the button is clicked
+      //   playButton.onclick = () => {
+      //     audioPlayer.play();
+      //   };
+      //   
+      // } catch (error) {
+      //   console.error('Error downloading audio:', error);
+      //   alert('Failed to download audio.');
+      // }
+    });
+  </script>
+
+</body>
+
+</html>

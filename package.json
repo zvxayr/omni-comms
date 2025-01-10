@@ -1,0 +1,28 @@
+{
+  "name": "omnicomms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/router": "^13.1.0",
+    "axios": "^1.7.9",
+    "handlebars": "^4.7.8",
+    "imap": "^0.8.19",
+    "koa": "^2.15.3",
+    "koa-body": "^6.0.1",
+    "koa-bodyparser": "^4.4.1",
+    "koa-compose": "^4.1.0",
+    "koa-static": "^5.0.0",
+    "mailparser": "^3.7.2",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^6.9.16",
+    "socket.io": "^4.8.1",
+    "sqlite3": "^5.1.7",
+    "twilio": "^5.4.0"
+  }
+}
